@@ -1,0 +1,347 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.w-33 {
+  width: 33.3333%;
+}
+
+.w-66 { 
+  width: 66.6666%;
+}
+
+.content {
+  margin-left: 230px !important;
+  height: 100%;
+}
+
+.auth-page {
+  align-items: center;
+  flex-direction: column;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+}
+
+.title {
+  font-size: 2rem;
+  color: #333;
+}
+
+p {
+  font-size: 1rem;
+  color: #666;
+}
+
+.navbar-vertical {
+  width: 200px;
+  height: 90%;
+  background: radial-gradient(circle, rgb(133, 133, 133) 50%, rgb(170, 170, 170) 100%);
+  box-shadow: 0px 4px 10px 1px #B9B9B9;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  border-radius: 20px;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navbar-vertical ul {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+}
+
+.navbar-vertical ul li {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.navbar-vertical ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.2rem;
+  display: block;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.navbar-vertical ul li a:hover {
+  font-weight: bold;
+}
+
+.section {
+  margin: 0 15px;
+}
+
+.profile {
+  display: flex;
+  flex-direction: row;
+}
+
+.pet-card {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  margin: 18px 0;
+  width: -webkit-fill-available;
+  padding: 18px 26px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pet-image {
+  flex-shrink: 0; /* Empêche l'image de rétrécir */
+  margin-right: 20px; /* Espace entre l'image et les infos */
+}
+
+.pet-photo {
+  width: 100px; /* Taille de l'image */
+  height: 100px;
+  border-radius: 50%; /* Image circulaire */
+  object-fit: cover; /* Assure que l'image est bien centrée et recadrée */
+}
+
+.pet-info {
+  flex-grow: 1; /* Permet aux informations de prendre l'espace restant */
+}
+
+.pet-name {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.pet-info p {
+  font-family: 'Roboto', sans-serif;
+  margin: 5px 0;
+  color: #555;
+}
+
+.pet-info p strong {
+  color: #333;
+}
+
+.pet-card p {
+  font-family: 'Roboto', sans-serif;
+  margin: 5px 0;
+  color: #555;
+}
+
+.pet-card p strong {
+  color: #333;
+}
+
+.log-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Conteneur principal du calendrier */
+.calendar-card {
+  display: flex;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  margin: 18px 0;
+  width: -webkit-fill-available;
+  padding: 8px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar {
+  border: 0px solid !important;
+  margin: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.react-calendar__tile {
+  color: #333;
+  border-radius: 6px;
+  transition: transform 0.2s ease, background-color 0.3s;
+}
+
+.react-calendar__tile:hover {
+  background: #e8f4ff; /* Bleu légèrement plus foncé */
+  transform: scale(1.05); /* Légère mise en avant */
+}
+
+.react-calendar__tile--active {
+  background: #007bff; /* Bleu vif */
+  color: white;
+  font-weight: bold;
+}
+
+.react-calendar__tile--now {
+  background: #ffeeba; /* Jaune clair */
+  color: #333;
+  font-weight: bold;
+}
+
+/* Jours hors du mois courant */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: red; /* Gris clair */
+}
+
+/* Navigation (boutons mois précédent/suivant) */
+.react-calendar__navigation {
+  margin-bottom: 10px;
+  display: flex;
+  color: orange;
+  justify-content: space-between;
+}
+
+.react-calendar__navigation button {
+  background-color: #007bff;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: #0056b3; /* Couleur plus foncée au survol */
+}
+
+.meets {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  align-items: flex-start;
+}
+
+/* Conteneur des boutons de filtre */
+.filter-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.filter-buttons button {
+  padding: 3px 8px;
+  margin: 0 5px;
+  border-radius: 12px;
+  background-color: #fff;
+  border: 1px solid #aeaeae;
+  color: #aeaeae;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-buttons button.active {
+  background-color: #aeaeae;;
+  border: 1px solid #aeaeae;
+  color: #fff;
+}
+
+.filter-buttons button:hover {
+  border: 1px solid #aeaeae;
+  color: #333;
+}
+
+/* Liste des rendez-vous */
+.appointment-list ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.appointment-list li {
+  background: #f9f9f9;
+  padding: 4px 10px;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.appointment-list li:hover {
+  background: #e8f4ff;
+}
+
+.appointment-list li span {
+  font-weight: bold;
+  color: #555;
+}
+
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  background-color: #37754667;
+  border-radius: 20px;
+  margin: 10px 0;
+  width: -webkit-fill-available;
+  padding: 10px 16px;
+  border: 1px solid rgb(51, 129, 69);
+}
+
+.contact-info {
+  flex-grow: 1; /* Permet aux informations de prendre l'espace restant */
+}
+
+.contact-name {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.contact-info p {
+  font-family: 'Roboto', sans-serif;
+  margin: 5px 0;
+  color: #555;
+}
+
+.contact-info p strong {
+  color: #333;
+}
+
+.contact-card p {
+  font-family: 'Roboto', sans-serif;
+  margin: 5px 0;
+  color: #555;
+}
+
+.contact-card p strong {
+  color: #333;
+}
