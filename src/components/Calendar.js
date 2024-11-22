@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/styles.css';
+import '../styles/utils.css';
 import petsData from '../assets/petsData';
 
 const appointments = [
@@ -65,7 +66,10 @@ const CalendarCard = () => {
 
   return (
     <div className="section w-66">
-      <h2>📆 Mes évènements</h2>
+      <div className='section-title'>
+        <h2>📆 Mes évènements</h2>
+        <button className='add-btn'>+</button>
+      </div>
       <div className="calendar-card">
         <Calendar onChange={setDate} value={date} />
         {/* Boutons pour changer de vue */}

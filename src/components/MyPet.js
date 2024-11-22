@@ -1,11 +1,15 @@
 import React from 'react';
 import '../styles/styles.css';
+import '../styles/utils.css';
 import petsData from '../assets/petsData.js'
 
 const MyPet = () => {
   return (
     <div className='section w-33'>
-      <h2>🐱 Mes animaux</h2>
+      <div className='section-title'>
+        <h2>🐱 Mes animaux</h2>
+        <button className='add-btn'>+</button>
+      </div>
       {petsData.map(pet => (
         <div key={pet.id} className="pet-card">
           <div className="pet-image">

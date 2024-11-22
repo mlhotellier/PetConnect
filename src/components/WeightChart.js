@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/styles.css';
+import '../styles/utils.css';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 import petsData from '../assets/petsData'; // Import des données des animaux
@@ -75,8 +76,11 @@ const WeightChart = () => {
 
   return (
     <div className="section w-66">
-      <h2>📈 Courbe de poids</h2>
-      <div className="weight-chart">
+      <div className='section-title'>
+        <h2>📈 Courbe de poids</h2>
+        <button className='add-btn'>+</button>
+      </div>
+      <div className="weight-chart weight-card">
         <Line data={chartData} options={chartOptions} />
       </div>
     </div>

@@ -3,12 +3,17 @@ import '../styles/styles.css';
 import MyPet from '../components/MyPet';
 import Calendar from '../components/Calendar';
 import Contact from '../components/Contact';
+import User from '../components/User';
 import WeightChart from '../components/WeightChart';
 import HistoriqueMedical from '../components/HistoriqueMedical';
+import PetFood from '../components/PetFood';
 
-function Profile() {
+function Profile({isLogged}) {
     return (
         <div style={{marginRight:'15px'}}>
+            <div className="profile">
+                <User isLogged={isLogged} />
+            </div>
             <div className="profile">
                 <Contact />
                 <Calendar />
@@ -16,10 +21,10 @@ function Profile() {
             <div className="profile">
                 <MyPet />
                 <WeightChart />
-
             </div>
             <div className="profile">
                 <HistoriqueMedical />
+                <PetFood />
             </div>
         </div>
     );

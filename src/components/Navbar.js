@@ -1,20 +1,30 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/styles.css';
+import '../styles/navbar.css';
+import logo from '../assets/logo.png'
 
 const Navbar = ({ isLogged, onLogout }) => {
   return (
     <nav className="navbar-vertical">
+      <div className='logo-container'>
+        <img src={logo} alt="logo" className='logo'/>
+      </div>
       <ul>
         <li>
-          <Link to="/">Accueil</Link>
+          <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/profile">{isLogged ? 'Mon compte' : 'Connexion'}</Link>
+          <Link to="/blog">Blog</Link>
+        </li>
+        <li>
+          <Link to="/contact">Contact</Link>
+        </li>
+        <li>
+          <Link to="/profile">{isLogged ? 'Mon compte' : 'Se connecter'}</Link>
         </li>
         {isLogged ? 
-          <button onClick={onLogout}>
-            Logout
+          <button style={{margin:'10px 22px',fontSize:'18px',backgroundColor:'transparent',padding:0, color:'red'}} onClick={onLogout}>
+            Déconnexion
           </button>
         :
           null

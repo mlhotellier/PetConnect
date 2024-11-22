@@ -5,14 +5,6 @@ html, body, #root {
   font-family: 'Roboto', sans-serif;
 }
 
-.w-33 {
-  width: 33.3333%;
-}
-
-.w-66 { 
-  width: 66.6666%;
-}
-
 .content {
   margin-left: 230px !important;
   height: 100%;
@@ -36,47 +28,23 @@ p {
   color: #666;
 }
 
-.navbar-vertical {
-  width: 200px;
-  height: 90%;
-  background: radial-gradient(circle, rgb(133, 133, 133) 50%, rgb(170, 170, 170) 100%);
-  box-shadow: 0px 4px 10px 1px #B9B9B9;
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  border-radius: 20px;
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.navbar-vertical ul {
-  list-style-type: none;
-  padding: 0;
-  width: 100%;
-}
-
-.navbar-vertical ul li {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.navbar-vertical ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 1.2rem;
-  display: block;
-  padding: 10px 0;
-  width: 100%;
-}
-
-.navbar-vertical ul li a:hover {
-  font-weight: bold;
-}
-
 .section {
   margin: 0 15px;
+}
+
+.section-title {
+  display: flex;
+  align-content: center;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.add-btn {
+  border-radius: 20px;
+  background-color: #aeaeae;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .profile {
@@ -89,7 +57,7 @@ p {
   align-items: center;
   background-color: #f9f9f9;
   border-radius: 20px;
-  margin: 18px 0;
+  margin: 4px 0 18px 0;
   width: -webkit-fill-available;
   padding: 18px 26px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -162,22 +130,22 @@ button {
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
+  background-color: #f14a84;
   color: white;
   font-size: 16px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #f3bdd0;
+  color: #333;
 }
 
-/* Conteneur principal du calendrier */
 .calendar-card {
   display: flex;
   background-color: #f9f9f9;
   border-radius: 20px;
-  margin: 18px 0;
+  margin: 4px 0 18px 0;
   width: -webkit-fill-available;
   padding: 8px 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -186,6 +154,7 @@ button:hover {
 .react-calendar {
   border: 0px solid !important;
   margin: 10px;
+  width: 55%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
@@ -243,6 +212,7 @@ button:hover {
 
 .meets {
   display: flex;
+  width: 45%;
   flex-direction: column;
   margin: 10px;
   align-items: flex-start;
@@ -307,11 +277,11 @@ button:hover {
 .contact-card {
   display: flex;
   align-items: center;
-  background-color: #37754667;
+  background-color: #cee3d367;
   border-radius: 20px;
-  margin: 10px 0;
+  margin: 4px 0 18px 0;
   width: -webkit-fill-available;
-  padding: 10px 16px;
+  padding: 5px 16px;
   border: 1px solid rgb(51, 129, 69);
 }
 
@@ -344,4 +314,41 @@ button:hover {
 
 .contact-card p strong {
   color: #333;
+}
+
+.weight-card {
+  display: flex;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  margin: 4px 0 18px 0;
+  width: -webkit-fill-available;
+  padding: 8px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.documents-card {
+  display: flex;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  margin: 4px 0 18px 0;
+  width: -webkit-fill-available;
+  padding: 8px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.food-card {
+  display: flex;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  margin: 4px 0 18px 0;
+  width: -webkit-fill-available;
+  padding: 8px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.userid {
+  font-size: 14px;
+  font-weight: 200;
+  color: rgb(181, 181, 181);
+  margin:20px 0 0 0;
 }
