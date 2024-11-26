@@ -1,73 +1,91 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import '../styles/styles.css';
+import axios from 'axios';
 
 const AuthPage = ({ setIsLogged }) => {
-  const [isSignUp, setIsSignUp] = useState(false); // État pour basculer entre Sign Up et Sign In
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false); // État pour basculer entre l'inscription et la connexion
+  const [error, setError] = useState(''); // Nouvel état pour gérer les messages d'erreur
 
-  const handleSubmit = (event) => {
+  // Fonction pour soumettre le formulaire d'inscription ou de connexion
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (isSignUp) {
-      // Logique pour l'inscription
-      alert('Compte créé avec succès !');
-    } else {
-      // Logique pour la connexion
-      setIsLogged(true); // Simuler la connexion
-      alert('Connexion réussie !');
+
+    const url = isSignUp
+      ? 'http://localhost:5000/api/auth/register' // Route d'inscription
+      : 'http://localhost:5000/api/auth/login'; // Route de connexion
+
+    try {
+      const response = await axios.post(url, { email, password });
+      console.log(response.data)
+      const token = response.data.token;
+      const userId = response.data.userId;
+      // Enregistrez le token dans localStorage
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('userId', userId);
+
+
+      // Modifiez l'état pour marquer l'utilisateur comme connecté
+      setIsLogged(true);
+
+    } catch (error) {
+      // Si une erreur se produit, affichez un message d'erreur
+      setError(error.response ? error.response.data.message : 'Erreur serveur');
+      console.error('Erreur:', error.response ? error.response.data.message : 'Erreur serveur');
     }
   };
 
+  // Fonction pour basculer entre les formulaires
   const toggleForm = () => {
-    setIsSignUp(!isSignUp); // Bascule entre Sign Up et Sign In
+    setIsSignUp((prev) => !prev);
+    setEmail('');
+    setPassword('');
+    setError(''); // Réinitialiser l'erreur lors du basculement
   };
 
   return (
-    <div className="container auth-page" style={{ marginRight: '15px' }}>
-      <h1>{isSignUp ? 'Créer un compte' : 'Se connecter'}</h1>
-
-      {/* Formulaire de connexion ou inscription */}
+    <div className="auth-page">
+      <h1 className="title">{isSignUp ? 'Créer un compte' : 'Se connecter'}</h1>
       <form onSubmit={handleSubmit} className="log-form">
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email">Email :</label>
           <input
             type="email"
-            id="email"
-            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            placeholder="Email"
+            className="form-control"
           />
         </div>
-
         <div className="form-group">
-          <label htmlFor="password">Mot de passe:</label>
+          <label htmlFor="password">Mot de passe :</label>
           <input
             type="password"
-            id="password"
-            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            placeholder="Mot de passe"
+            className="form-control"
           />
         </div>
-
-        <button type="submit">{isSignUp ? 'S\'inscrire' : 'Se connecter'}</button>
+        <button type="submit" className="submit-btn">
+          {isSignUp ? 'Créer un compte' : 'Se connecter'}
+        </button>
       </form>
 
-      {/* Lien pour basculer entre les deux formulaires */}
-      <p>
-        {isSignUp ? (
-          <>
-            Déjà un compte ? <Link to="#" onClick={toggleForm}>Se connecter</Link>
-          </>
-        ) : (
-          <>
-            Pas encore de compte ? <Link to="#" onClick={toggleForm}>Créer un compte</Link>
-          </>
-        )}
-      </p>
+      {error && <p className="error-message">{error}</p>} {/* Affichage de l'erreur */}
+
+      <div>
+        <p>
+          {isSignUp
+            ? 'Vous avez déjà un compte ?'
+            : "Vous n'avez pas de compte ?"}
+          <button onClick={toggleForm} className="toggle-form-btn">
+            {isSignUp ? 'Se connecter' : 'Créer un compte'}
+          </button>
+        </p>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,9 @@
 import React from 'react';
 
-const User = ({isLogged}) => { 
-  console.log('User',isLogged)
+const User = ({user}) => { 
   return (
     <div className='section w-100'>
-        <p className='userid'>Hello user000001 !</p>
+        <p className='userid'>Hello {user ? user.email : 'test'} !</p>
     </div>
   );
 };
