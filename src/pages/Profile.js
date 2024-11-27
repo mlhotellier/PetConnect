@@ -8,7 +8,8 @@ import WeightChart from '../components/WeightChart';
 import HistoriqueMedical from '../components/HistoriqueMedical';
 import PetFood from '../components/PetFood';
 import axios from 'axios';
-const serverUrl = process.env.SERVER_URL
+
+const serverUrl = `${process.env.REACT_APP_SERVER_BACKEND_URL}`
 
 function Profile() {
   const [user, setUser] = useState(null); // Données utilisateur
@@ -32,7 +33,7 @@ function Profile() {
   const fetchPets = async () => {
       setLoadingPets(true);
       try {
-        const response = await axios.get(`${serverUrl}/api/pets`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets`);
         setPets(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération des animaux:', error);
@@ -47,7 +48,7 @@ function Profile() {
   // Ajouter un animal
   const addPet = async (petData) => {
     try {
-      const response = await axios.post(`${serverUrl}/api/pets/add`, petData, {
+      const response = await axios.post(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/add`, petData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -61,7 +62,7 @@ function Profile() {
   // Mettre à jour un animal
   const updatePet = async (petId, petData) => {
     try {
-      const response = await axios.put(`${serverUrl}/api/pets/update/${petId}`, petData, {
+      const response = await axios.put(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/update/${petId}`, petData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -75,7 +76,7 @@ function Profile() {
   // Supprimer un animal
   const deletePet = async (petId) => {
     try {
-      await axios.delete(`${serverUrl}/api/pets/remove/${petId}`);
+      await axios.delete(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/remove/${petId}`);
       setPets(pets.filter(pet => pet._id !== petId)); // Retirer l'animal supprimé
     } catch (error) {
       console.error('Erreur lors de la suppression de l\'animal:', error);
@@ -99,7 +100,7 @@ function Profile() {
       }
   
       // Si la date est valide, envoyer la requête au backend
-      const response = await axios.put(`${serverUrl}/api/pets/add-weight/${petId}`, {
+      const response = await axios.put(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/add-weight/${petId}`, {
         date,
         weight,
       });
