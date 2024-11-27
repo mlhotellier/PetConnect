@@ -83,6 +83,36 @@ function Profile() {
     }
   };
 
+  // Ajouter un poids pour un animal
+  const addWeightData = async (weightData) => {
+    const { petId, date, weight } = weightData;
+  
+    try {
+      // Vérification que la date est supérieure à la date de naissance
+      const pet = pets.find(pet => pet._id === petId);
+      const birthDate = new Date(pet.birthDate); // Date de naissance de l'animal
+      const selectedDate = new Date(date); // Date sélectionnée pour le poids
+  
+      // Si la date sélectionnée est avant la date de naissance, ne pas permettre l'ajout
+      if (selectedDate <= birthDate) {
+        alert("La date sélectionnée doit être après la date de naissance de l'animal.");
+        return;
+      }
+  
+      // Si la date est valide, envoyer la requête au backend
+      const response = await axios.put(`http://localhost:5000/api/pets/add-weight/${petId}`, {
+        date,
+        weight,
+      });
+  
+      // Mettre à jour les données de l'animal dans l'état
+      setPets(pets.map(pet => (pet._id === petId ? response.data : pet)));
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout/modification du poids:', error);
+    }
+  };
+  
+
   return (
     <div style={{ marginRight: '15px' }}>
       <div className="profile">
@@ -101,7 +131,11 @@ function Profile() {
             updatePet={updatePet}
             deletePet={deletePet}
         />
-        <WeightChart pets={pets} loadingPets={loadingPets} />
+        <WeightChart 
+          pets={pets} 
+          loadingPets={loadingPets}
+          addWeightData={addWeightData}
+        />
       </div>
       <div className="profile">
         <HistoriqueMedical />

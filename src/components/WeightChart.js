@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from 'chart.js';
 
@@ -14,7 +14,29 @@ ChartJS.register(
   Filler
 );
 
-const WeightChart = ({ pets, loadingPets }) => {
+const WeightChart = ({ pets, loadingPets, addWeightData }) => {
+  // Etat pour gérer l'affichage du formulaire
+  const [showForm, setShowForm] = useState(false);
+  const [selectedPet, setSelectedPet] = useState('');
+  const [date, setDate] = useState('');
+  const [weight, setWeight] = useState('');
+
+  // Fonction pour générer une couleur unique (HSL)
+  const generateColor = (index) => {
+    const hue = (index * 137) % 360; // Une teinte unique par animal
+    return `hsl(${hue}, 70%, 50%)`; // Couleur vive
+  };
+
+  // Associer chaque animal à une couleur
+  const petColors = pets.reduce((acc, pet, index) => {
+    const baseColor = generateColor(index);
+    acc[pet._id] = {
+      point: baseColor, // Couleur pleine pour les points
+      line: baseColor.replace('50%)', '50%, 40%)'), // Couleur transparente pour les lignes
+    };
+    return acc;
+  }, {});
+
   // Vérification : S'assurer que les données des animaux existent et sont valides
   if (!pets || pets.length === 0) {
     return <div>Aucun animal trouvé</div>;
@@ -86,16 +108,18 @@ const WeightChart = ({ pets, loadingPets }) => {
     labels: allDates, // Utilisation des dates triées pour l'axe des X
     datasets: pets.map((pet, index) => {
       const petWeights = interpolateMissingData(allDates, pet.data, pet.birthDate); // Interpoler les données manquantes, en excluant les poids avant birthDate
-
+      
       return {
-        label: `${pet.name} - Poids`,
-        data: petWeights, // Poids de l'animal pour chaque date
-        borderColor: index % 2 === 0 ? 'rgba(75, 192, 192, 1)' : 'rgba(255, 99, 132, 1)', // Couleur de chaque courbe
-        backgroundColor: index % 2 === 0 ? 'rgba(75, 192, 192, 0.2)' : 'rgba(255, 99, 132, 0.2)',
-        fill: false, // Pas de remplissage sous la courbe
-        tension: 0, // Pas de lissage de la courbe, juste des points
-        pointStyle: 'circle', // Utiliser des points
-        radius: 5, // Taille des points
+        label: `${pet.name}`,
+        data: petWeights,
+        borderColor: petColors[pet._id].line, // Couleur transparente pour la ligne
+        backgroundColor: petColors[pet._id].line,
+        pointBackgroundColor: petColors[pet._id].point, // Couleur pleine pour les points
+        pointBorderColor: petColors[pet._id].point,
+        fill: false,
+        tension: 0,
+        pointStyle: 'circle',
+        radius: 5,
       };
     }),
   };
@@ -125,14 +149,87 @@ const WeightChart = ({ pets, loadingPets }) => {
     },
   };
 
+  // Fonction pour gérer l'ajout d'un nouveau poids
+  const handleAddWeight = (e) => {
+    e.preventDefault();
+
+    // Vérifier que la date et le poids sont valides
+    if (!date || !weight || isNaN(weight)) {
+      alert("Veuillez entrer une date valide et un poids valide.");
+      return;
+    }
+
+    // Ajouter la nouvelle donnée de poids pour l'animal sélectionné
+    const weightData = {
+      petId: selectedPet,
+      date,
+      weight: parseFloat(weight),
+    };
+
+    // Appeler la fonction `addWeightData` passée en props pour ajouter les données
+    addWeightData(weightData);
+
+    // Réinitialiser les champs
+    setSelectedPet('');
+    setDate('');
+    setWeight('');
+    setShowForm(false); // Fermer le formulaire après soumission
+  };
+
   return (
     <div className="section w-66">
       <div className="section-title">
         <h2>📈 Courbe de poids</h2>
+        <button className="add-btn" onClick={() => setShowForm(true)}>+</button>
       </div>
       <div className="weight-chart weight-card">
         <Line data={chartData} options={chartOptions} />
       </div>
+
+      {/* Formulaire pour ajouter un poids */}
+      {showForm && (
+        <div className="weight-form">
+          <h3>Ajouter un poids</h3>
+          <form onSubmit={handleAddWeight}>
+            <div>
+              <label>Choisir un animal :</label>
+              <select
+                value={selectedPet}
+                onChange={(e) => setSelectedPet(e.target.value)}
+                required
+              >
+                <option value="">Sélectionner un animal</option>
+                {pets.map((pet) => (
+                  <option key={pet._id} value={pet._id}>
+                    {pet.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>Date :</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <label>Poids :</label>
+              <input
+                type="number"
+                value={weight}
+                onChange={(e) => setWeight(e.target.value)}
+                placeholder="Poids"
+                required
+              />
+            </div>
+            <button type="submit">Ajouter le poids</button>
+            <button type="button" onClick={() => setShowForm(false)}>Annuler</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
