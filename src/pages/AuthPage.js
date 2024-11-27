@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+const serverUrl = process.env.SERVER_URL
 
 const AuthPage = ({ setIsLogged }) => {
   const [email, setEmail] = useState('');
@@ -12,8 +13,8 @@ const AuthPage = ({ setIsLogged }) => {
     event.preventDefault();
 
     const url = isSignUp
-      ? 'http://localhost:5000/api/auth/register' // Route d'inscription
-      : 'http://localhost:5000/api/auth/login'; // Route de connexion
+      ? `${serverUrl}/api/auth/register` // Route d'inscription
+      : `${serverUrl}/api/auth/login`; // Route de connexion
 
     try {
       const response = await axios.post(url, { email, password });

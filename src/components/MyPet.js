@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/styles.css';
 import '../styles/utils.css';
-
-const serverUrl = 'http://localhost:5000/uploads/pets/optimized/';
+const serverUrl = process.env.SERVER_URL
 
 const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
   const [showForm, setShowForm] = useState(false);
@@ -128,7 +127,7 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
             return (
               <div key={pet._id} className="pet-card">
                 <div className="pet-image">
-                  <img src={`${serverUrl}${pet.image}`} alt={pet.name} className="pet-photo" />
+                  <img src={`${serverUrl}/uploads/pets/optimized/${pet.image}`} alt={pet.name} className="pet-photo" />
                 </div>
                 <div className="pet-info">
                   <h2 className="pet-name">{pet.name}</h2>
