@@ -72,8 +72,6 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
     if (image) {
       petData.append('image', image);
     }
-
-    console.log('petData:', petData); // Vérification du contenu de FormData
     
     addPet(petData);
     toggleForm(); // Fermer le formulaire après soumission
@@ -133,19 +131,19 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
             const { years, months } = calculateAge(pet.birthDate); // Calculer l'âge
             return (
               <div key={pet._id} className="pet-card">
-                <div className="pet-image">
-                  <img src={`${imgRepository}${pet.image}`} alt={pet.name} className="pet-photo" />
-                </div>
-                <div className="pet-info">
-                  <h2 className="pet-name">{pet.name}</h2>
-                  <p><strong>Type:</strong> {pet.type}</p>
-                  <p><strong>Couleur:</strong> {pet.color}</p>
-                  <p><strong>Poids actuel:</strong> {lastWeight} kg</p>
-                  <p><strong>Âge:</strong> {years} an{years !== 1 ? 's' : ''} et {months} mois</p>
-                  <button onClick={() => handleEditForm(pet)}>Modifier</button>
-                  <button onClick={() => handleDelete(pet._id)}>Supprimer</button>
-                </div>
+              <div className="pet-image">
+                <img src={`${imgRepository}${pet.image}`} alt={pet.name} className="pet-photo" />
               </div>
+              <div className="pet-info">
+                <h2 className="pet-name">{pet.name}</h2>
+                <p><strong>Type:</strong> {pet.type}</p>
+                <p><strong>Couleur:</strong> {pet.color}</p>
+                <p><strong>Poids actuel:</strong> {lastWeight} kg</p>
+                <p><strong>Âge:</strong> {years} an{years !== 1 ? 's' : ''} et {months} mois</p>
+                <button onClick={() => handleEditForm(pet)}>Modifier</button>
+                <button onClick={() => handleDelete(pet._id)}>Supprimer</button>
+              </div>
+            </div>
             );
           })
         ) : (
@@ -247,14 +245,14 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
                 placeholder="Couleur"
                 required
               />
-              <input
+              {/* <input
                 type="number"
                 name="weight"
                 value={formData.weight}
                 onChange={handleChange}
                 placeholder="Poids"
                 required
-              />
+              /> */}
               <input
                 type="file"
                 name="image"
