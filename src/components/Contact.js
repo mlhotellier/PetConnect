@@ -11,7 +11,6 @@ const Contact = () => {
   const [adress, setAdress] = useState('');
   const [phone, setPhone] = useState('');
   const [mail, setMail] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const [currentContactId, setCurrentContactId] = useState(null); // ID du contact en cours de modification
 
   // Fonction pour ouvrir/fermer la modale
@@ -30,12 +29,16 @@ const Contact = () => {
   // Récupérer les contacts depuis l'API
   useEffect(() => {
     const fetchContacts = async () => {
+      const token = localStorage.getItem('authToken');
       try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
         setContacts(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération des contacts:', error);
-        setErrorMessage('Erreur lors de la récupération des contacts.');
       }
     };
 
@@ -46,26 +49,35 @@ const Contact = () => {
   const addContact = async (e) => {
     e.preventDefault();
 
-    if (!name || !adress || !phone || !mail) {
-      alert('Tous les champs doivent être remplis');
-      return;
-    }
-
-    const formData = {
+    const contactData = {
       name,
       adress,
       phone,
       mail,
-      userId: localStorage.getItem('userId'),
     };
 
+    const token = localStorage.getItem('authToken'); // Récupérer le token depuis le localStorage
+
+    if (!token) {
+      alert('Vous devez être connecté pour ajouter un contact.');
+      return;
+    }
+
     try {
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/add`, formData);
-      setContacts((prevContacts) => [...prevContacts, response.data]);
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/add`,
+        contactData,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`, // Ajouter le token d'authentification
+          },
+        }
+      );
+      setContacts(contacts.map(contact => (contact._id === currentContactId ? response.data : contact)));
       setShowForm(false);
+      setIsEditing(false); // Reset mode edit
     } catch (error) {
-      console.error('Erreur lors de l\'ajout du contact:', error.response?.data || error.message);
-      setErrorMessage('Erreur lors de l\'ajout du contact.');
+      console.error('Erreur lors de l\'ajout du contact:', error);
     }
   };
 
@@ -85,21 +97,35 @@ const Contact = () => {
       mail,
     };
 
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      alert('Vous devez être connecté pour modifier un contact.');
+      return;
+    }
+
     try {
-      const response = await axios.put(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/update/${currentContactId}`, formData);
+      const response = await axios.put(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/update/${currentContactId}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
       setContacts(contacts.map(contact => (contact._id === currentContactId ? response.data : contact)));
       setShowForm(false);
       setIsEditing(false); // Reset mode edit
     } catch (error) {
       console.error('Erreur lors de la modification du contact:', error.response?.data || error.message);
-      setErrorMessage('Erreur lors de la modification du contact.');
     }
   };
 
   // Supprimer un contact
   const deleteContact = async (contactId) => {
+    const token = localStorage.getItem('authToken');
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/remove/${contactId}`);
+      await axios.delete(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/remove/${contactId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
       setContacts(contacts.filter(contact => contact._id !== contactId));
     } catch (error) {
       console.error('Erreur lors de la suppression du contact:', error);
@@ -123,8 +149,6 @@ const Contact = () => {
         <h2>📇 Contacts</h2>
         <button className="add-btn" onClick={toggleForm}>+</button>
       </div>
-
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
 
       {/* Liste des contacts récupérés */}
       {contacts.length > 0 ? (

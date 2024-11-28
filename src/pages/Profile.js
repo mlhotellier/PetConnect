@@ -21,9 +21,14 @@ function Profile() {
 
   // Récupérer les animaux depuis l'API
   const fetchPets = async () => {
+      const token = localStorage.getItem('authToken');
       setLoadingPets(true);
       try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
         setPets(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération des animaux:', error);
@@ -44,13 +49,10 @@ function Profile() {
       return;
     }
 
-    console.log(petData,'petData****')
-
     try {
       const response = await axios.post(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/add`, petData, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
         }
       });
       console.log(response.data)
@@ -62,11 +64,18 @@ function Profile() {
 
   // Mettre à jour un animal
   const updatePet = async (petId, petData) => {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      alert('Vous devez être connecté pour ajouter un animal.');
+      return;
+    }
+
     try {
       const response = await axios.put(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/update/${petId}`, petData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+          'Authorization': `Bearer ${token}`,
+        }
       });
       setPets(pets.map(pet => (pet._id === petId ? response.data : pet))); // Mettre à jour l'animal
     } catch (error) {
@@ -76,8 +85,19 @@ function Profile() {
 
   // Supprimer un animal
   const deletePet = async (petId) => {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      alert('Vous devez être connecté pour ajouter un animal.');
+      return;
+    }
+
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/remove/${petId}`);
+      await axios.delete(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/remove/${petId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+    });
       setPets(pets.filter(pet => pet._id !== petId)); // Retirer l'animal supprimé
     } catch (error) {
       console.error('Erreur lors de la suppression de l\'animal:', error);
@@ -87,6 +107,12 @@ function Profile() {
   // Ajouter un poids pour un animal
   const addWeightData = async (weightData) => {
     const { petId, date, weight } = weightData;
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      alert('Vous devez être connecté pour modifier un animal.');
+      return;
+    }
   
     try {
       // Vérification que la date est supérieure à la date de naissance
@@ -104,6 +130,10 @@ function Profile() {
       const response = await axios.put(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/add-weight/${petId}`, {
         date,
         weight,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
       });
   
       // Mettre à jour les données de l'animal dans l'état
