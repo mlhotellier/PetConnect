@@ -7,7 +7,6 @@ import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
-import MyPet from './components/MyPet';
 
 // Wrapper pour permettre l'utilisation de `useNavigate`
 const AppWrapper = () => {
@@ -46,10 +45,6 @@ const App = () => {
         <Route
           path="/profile"
           element={isLogged ? <Profile /> : <AuthPage setIsLogged={setIsLogged} />}
-        />
-        <Route
-          path="/my-pets"
-          element={isLogged ? <MyPet /> : <AuthPage setIsLogged={setIsLogged} />}
         />
       </Routes>
     </div>

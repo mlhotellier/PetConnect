@@ -23,11 +23,6 @@ const Navbar = ({ isLogged, onLogout }) => {
           <Link to="/profile">{isLogged ? 'Mon compte' : 'Se connecter'}</Link>
         </li>
         {isLogged ? 
-        <li>
-          <Link to="/my-pets">Mes animaux</Link>
-        </li>
-        : '' }
-        {isLogged ? 
           <button style={{margin:'10px 22px',fontSize:'18px',backgroundColor:'transparent',padding:0, color:'red'}} onClick={onLogout}>
             Déconnexion
           </button>

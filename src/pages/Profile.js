@@ -3,29 +3,19 @@ import '../styles/styles.css';
 import MyPet from '../components/MyPet';
 import Calendar from '../components/Calendar';
 import Contact from '../components/Contact';
-import User from '../components/User';
 import WeightChart from '../components/WeightChart';
 import HistoriqueMedical from '../components/HistoriqueMedical';
 import PetFood from '../components/PetFood';
 import axios from 'axios';
 
-const serverUrl = `${process.env.REACT_APP_SERVER_BACKEND_URL}`
-
 function Profile() {
-  const [user, setUser] = useState(null); // Données utilisateur
   const [pets, setPets] = useState([]);
   const [loadingPets, setLoadingPets] = useState(true);
 
-  // Récupérer le profil utilisateur
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    if (token) {
-      axios
-        .get(`${serverUrl}/api/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((response) => setUser(response.data))
-        .catch((error) => console.error('Erreur lors de la récupération du profil', error));
+    if (!token) {
+      window.location.href = '/login'; // Rediriger si le token est manquant
     }
   }, []);
 
@@ -47,12 +37,23 @@ function Profile() {
 
   // Ajouter un animal
   const addPet = async (petData) => {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      alert('Vous devez être connecté pour ajouter un animal.');
+      return;
+    }
+
+    console.log(petData,'petData****')
+
     try {
       const response = await axios.post(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/pets/add`, petData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
       });
+      console.log(response.data)
       setPets([...pets, response.data]); // Ajouter le nouvel animal à la liste
     } catch (error) {
       console.error('Erreur lors de l\'ajout de l\'animal:', error);
@@ -115,9 +116,6 @@ function Profile() {
 
   return (
     <div style={{ marginRight: '15px' }}>
-      <div className="profile">
-        <User user={user} />
-      </div>
       <div className="profile">
         <Contact />
         <Calendar />

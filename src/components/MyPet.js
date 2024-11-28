@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import '../styles/styles.css';
 import '../styles/utils.css';
 
-
 const imgRepository = `${process.env.REACT_APP_SERVER_BACKEND_URL}/uploads/pets/optimized/`;
 
 const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
@@ -68,8 +67,14 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
     petData.append('color', color);
     petData.append('weight', weight);
     petData.append('userId', localStorage.getItem('userId'));
-    if (image) petData.append('image', image);
+    
+    // Vérification si l'image existe avant de l'ajouter
+    if (image) {
+      petData.append('image', image);
+    }
 
+    console.log('petData:', petData); // Vérification du contenu de FormData
+    
     addPet(petData);
     toggleForm(); // Fermer le formulaire après soumission
   };
