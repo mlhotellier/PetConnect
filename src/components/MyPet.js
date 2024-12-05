@@ -34,6 +34,7 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
     return { years, months };
   };
 
+  // Function to validate Formdata at adding pets
   const validateForm = () => {
     const errors = {};
     if (!formData.name) errors.name = 'Le nom est obligatoire.';
@@ -153,12 +154,6 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
   // Soumettre le formulaire pour modifier un animal
   const handleEdit = (e) => {
     e.preventDefault();
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
-    }
-
     const { name, birthDate, type, color, weight, image } = formData;
 
     const petData = new FormData();
@@ -217,7 +212,6 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
       ) : (
         pets.length > 0 ? (
           pets.map((pet) => {
-            const lastWeight = pet.data[pet.data.length - 1]?.weight || 'N/A'; // Dernier poids ou N/A
             const { years, months } = calculateAge(pet.birthDate); // Calculer l'âge
             return (
               <div key={pet._id} className="pet-card">
@@ -226,9 +220,8 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
               </div>
               <div className="pet-info">
                 <h2 className="pet-name">{pet.name}</h2>
-                {/* <p><strong>Type:</strong> {pet.type}</p> */}
+                <p><strong>Type: </strong>{pet.type}</p>
                 <p><strong>Couleur: </strong>{pet.color}</p>
-                <p><strong>Poids actuel: </strong>{lastWeight} kg</p>
                 <p><strong>Âge: </strong>{years} an{years !== 1 ? 's' : ''} et {months} mois</p>
                 <div className='pet-btn'>
                   <button className='btn modify' onClick={() => handleEditForm(pet)}>Modifier</button>

@@ -14,12 +14,13 @@ ChartJS.register(
   Filler
 );
 
-const WeightChart = ({ pets, loadingPets, addWeightData }) => {
+const WeightChart = ({ pets, loadingPets, addWeightData, deleteWeightData }) => {
   // Etat pour gérer l'affichage du formulaire
   const [showForm, setShowForm] = useState(false);
   const [selectedPet, setSelectedPet] = useState('');
   const [date, setDate] = useState('');
   const [weight, setWeight] = useState('');
+  const [editData, setEditData] = useState(null);
 
   // Fonction pour générer une couleur unique (HSL)
   const generateColor = (index) => {
@@ -36,11 +37,6 @@ const WeightChart = ({ pets, loadingPets, addWeightData }) => {
     };
     return acc;
   }, {});
-
-  // Vérification : S'assurer que les données des animaux existent et sont valides
-  if (!pets || pets.length === 0) {
-    return <div>Aucun animal trouvé</div>;
-  }
 
   // Récupérer toutes les dates uniques pour les axes
   const allDates = [];
@@ -60,59 +56,24 @@ const WeightChart = ({ pets, loadingPets, addWeightData }) => {
   // Trier les dates par ordre chronologique
   allDates.sort((a, b) => new Date(a) - new Date(b));
 
-  // Fonction pour interpoler les poids manquants (moyenne entre les valeurs précédentes et suivantes)
-  const interpolateMissingData = (allDates, petData, birthDate) => {
-    const interpolatedData = allDates.map((date) => {
-      // Trouver toutes les entrées pour cette date
-      const entriesForDate = petData.filter(
-        (entry) => new Date(entry.date).toISOString().split('T')[0] === date
-      );
-
-      // Ignorer les poids avant la birthDate
-      if (new Date(date) < new Date(birthDate)) {
-        return null;
-      }
-
-      if (entriesForDate.length > 0) {
-        // Si plusieurs entrées pour la même date, prendre la dernière entrée
-        const lastEntry = entriesForDate[entriesForDate.length - 1];
-        return lastEntry.weight;
-      }
-
-      // Si pas de donnée pour la date, on fait une interpolation
-      const previousEntry = petData.find(
-        (entry) =>
-          entry.date &&
-          new Date(entry.date).toISOString().split('T')[0] === allDates[allDates.indexOf(date) - 1]
-      );
-      const nextEntry = petData.find(
-        (entry) =>
-          entry.date &&
-          new Date(entry.date).toISOString().split('T')[0] === allDates[allDates.indexOf(date) + 1]
-      );
-
-      if (previousEntry && nextEntry) {
-        // Moyenne des poids précédent et suivant
-        return (previousEntry.weight + nextEntry.weight) / 2;
-      }
-
-      // Si aucune donnée précédente ou suivante, on renvoie null
-      return null;
+  // Fonction pour récupérer les poids existants (sans interpolation)
+  const getWeightData = (petData, allDates) => {
+    return allDates.map((date) => {
+      const entry = petData.find((entry) => new Date(entry.date).toISOString().split('T')[0] === date);
+      return entry ? entry.weight : null; // Si pas de donnée pour cette date, on met null
     });
-
-    return interpolatedData;
   };
 
   // Formatage des données pour Chart.js
   const chartData = {
     labels: allDates, // Utilisation des dates triées pour l'axe des X
     datasets: pets.map((pet, index) => {
-      const petWeights = interpolateMissingData(allDates, pet.data, pet.birthDate); // Interpoler les données manquantes, en excluant les poids avant birthDate
-      
+      const petWeights = getWeightData(pet.data, allDates); // Utiliser les poids existants
+
       return {
         label: `${pet.name}`,
         data: petWeights,
-        borderColor: petColors[pet._id].line, // Couleur transparente pour la ligne
+        borderColor: 'transparent', // Couleur transparente pour la ligne
         backgroundColor: petColors[pet._id].line,
         pointBackgroundColor: petColors[pet._id].point, // Couleur pleine pour les points
         pointBorderColor: petColors[pet._id].point,
@@ -147,6 +108,35 @@ const WeightChart = ({ pets, loadingPets, addWeightData }) => {
         intersect: false,
       },
     },
+    onClick: (e, elements) => {
+      if (elements.length > 0) {
+        const element = elements[0];
+        const petId = pets[element.datasetIndex]._id;
+        const date = chartData.labels[element.index];
+        const weight = pets[element.datasetIndex].data.find(
+          (entry) => new Date(entry.date).toISOString().split('T')[0] === date
+        ).weight;
+
+        const petData = new FormData();
+        petData.append('weight', weight);
+        petData.append('userId', localStorage.getItem('userId'));
+
+        setEditData({ petId, date, weight });
+        setSelectedPet(petId);
+        setDate(date);
+        setWeight(weight);
+        setShowForm(true);
+      }
+    },
+  };
+
+  // Basculer l'affichage du formulaire
+  const toggleForm = () => {
+    setShowForm(!showForm);
+    setSelectedPet('');
+    setDate('');
+    setWeight('');
+    setEditData(null);
   };
 
   // Fonction pour gérer l'ajout d'un nouveau poids
@@ -169,13 +159,32 @@ const WeightChart = ({ pets, loadingPets, addWeightData }) => {
     // Appeler la fonction `addWeightData` passée en props pour ajouter les données
     addWeightData(weightData);
 
-    // Réinitialiser les champs
-    setSelectedPet('');
-    setDate('');
-    setWeight('');
-    setShowForm(false); // Fermer le formulaire après soumission
+    toggleForm();
   };
 
+  const handleDeleteWeight = (e) => {
+    e.preventDefault();
+
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce poids ?")) {
+      return; // Ne rien faire si l'utilisateur annule
+    }
+
+    if (!date || !weight || isNaN(weight)) {
+      alert("Aucun poids sélectionné à supprimer.");
+      return;
+    }
+
+    const weightData = {
+      petId: selectedPet,
+      date,
+      weight,
+    };
+
+    deleteWeightData(weightData);
+
+    toggleForm();
+  };
+  
   return (
     <div className="section w-66">
       <div className="section-title">
@@ -183,51 +192,76 @@ const WeightChart = ({ pets, loadingPets, addWeightData }) => {
         <button className="add-btn" onClick={() => setShowForm(true)}>+</button>
       </div>
       <div className="weight-chart weight-card">
-        <Line data={chartData} options={chartOptions} />
+        {loadingPets ? (
+          <p>Chargement...</p>
+        ) : (
+          <Line data={chartData} options={chartOptions} />
+        )}
       </div>
 
-      {/* Formulaire pour ajouter un poids */}
+      {/* Formulaire pour ajouter ou supprimer un poids */}
       {showForm && (
-        <div className="weight-form">
-          <h3>Ajouter un poids</h3>
-          <form onSubmit={handleAddWeight}>
-            <div>
-              <label>Choisir un animal :</label>
-              <select
-                value={selectedPet}
-                onChange={(e) => setSelectedPet(e.target.value)}
-                required
-              >
-                <option value="">Sélectionner un animal</option>
-                {pets.map((pet) => (
-                  <option key={pet._id} value={pet._id}>
-                    {pet.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label>Date :</label>
-              <input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label>Poids :</label>
-              <input
-                type="number"
-                value={weight}
-                onChange={(e) => setWeight(e.target.value)}
-                placeholder="Poids"
-                required
-              />
-            </div>
-            <button type="submit">Ajouter le poids</button>
-            <button type="button" onClick={() => setShowForm(false)}>Annuler</button>
-          </form>
+        <div className="modal-overlay">
+          <div className="modal-content weight-form">
+            <h3>{editData ? 'Modifier un poids' : 'Ajouter un poids'}</h3>
+            <button className="canceled-form-btn" type="button" onClick={toggleForm}>X</button>
+            <form className="add-weight-form" onSubmit={editData ? handleDeleteWeight : handleAddWeight}>
+              <div>
+                <p>{editData ? 'Animal :' : 'Choisir un animal :'}</p>
+                {editData ? (
+                  <p>{pets.find((pet) => pet._id === selectedPet)?.name || 'Animal inconnu'}</p>
+                ) : (
+                  <select
+                    value={selectedPet}
+                    onChange={(e) => setSelectedPet(e.target.value)}
+                    required
+                  >
+                    <option value="">Sélectionner un animal</option>
+                    {pets.map((pet) => (
+                      <option key={pet._id} value={pet._id}>
+                        {pet.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+              <div>
+                <p>Date :</p>
+                {editData ? 
+                  <p>{editData.date}</p> :
+                  <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                  /> 
+                }
+              </div>
+              <div>
+                <p>Poids :</p>
+                {editData ? 
+                  <p>{editData.weight} Kg</p> :
+                  <input
+                    type="number"
+                    value={weight}
+                    onChange={(e) => setWeight(e.target.value)}
+                    placeholder="Poids (kg)"
+                    required
+                  />
+                }
+              </div>
+              <div className="form-actions">
+                {!editData ? (
+                  <button type="submit">Ajouter un poids</button>
+                ) : (
+                  <>
+                    <button type="submit">Supprimer</button>
+                    <button type="button" onClick={toggleForm}>Annuler</button>
+                  </>
+                )}
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </div>

@@ -57,7 +57,7 @@ function Profile() {
       alert('Vous devez être connecté pour mettre à jour un animal.');
       return;
     }
-
+    
     try {
       const updatedPet = await apiRequest('PUT', `/api/pets/update/${petId}`, petData, token);
       setPets(pets.map(pet => (pet._id === petId ? updatedPet : pet)));
@@ -90,13 +90,36 @@ function Profile() {
     }
 
     try {
-      const updatedPet = await apiRequest('PUT', `/api/pets/add-weight/${petId}`, { date, weight }, token);
-      setPets(pets.map(pet => (pet._id === petId ? updatedPet : pet)));
+      const updatedWeight = await apiRequest('PUT', `/api/pets/add-weight/${petId}`, { date, weight }, token);
+      setPets(pets.map(pet => (pet._id === petId ? updatedWeight : pet)));
     } catch (error) {
       console.error('Erreur lors de l\'ajout/modification du poids:', error);
     }
   };
 
+  const deleteWeightData = async (weightData) => {
+    const { petId, date, weight } = weightData;
+    const token = localStorage.getItem('authToken'); // Récupération du token
+  
+    if (!token) {
+      alert('Vous devez être connecté pour supprimer le poids.');
+      return;
+    }
+  
+    try {
+      // Appel API pour supprimer l'entrée de poids de l'animal
+      const response = await apiRequest('PUT', `/api/pets/remove-weight/${petId}`, { date, weight }, token);
+  
+      // Mise à jour de la liste des animaux avec les données mises à jour
+      setPets(pets.map(pet => 
+        pet._id === petId ? response.updatedPet : pet
+      ));
+  
+    } catch (error) {
+      console.error('Erreur lors de la suppression du poids:', error);
+    }
+  };
+  
   return (
     <div style={{ marginRight: '15px' }}>
       <div className="profile">
@@ -113,9 +136,10 @@ function Profile() {
             deletePet={deletePet}
         />
         <WeightChart 
-          pets={pets} 
-          loadingPets={loadingPets}
-          addWeightData={addWeightData}
+            pets={pets} 
+            loadingPets={loadingPets}
+            addWeightData={addWeightData}
+            deleteWeightData={deleteWeightData}
         />
       </div>
       <div className="profile">
