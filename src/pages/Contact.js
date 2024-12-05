@@ -32,7 +32,7 @@ function Contact() {
       </p>
 
       {/* Formulaire de contact */}
-      <form onSubmit={handleSubmit} className="contact-form">
+      <form onSubmit={handleSubmit} className="contact-card-form">
         <div className="form-group">
           <label htmlFor="name">Nom :</label>
           <input

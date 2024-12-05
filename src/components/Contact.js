@@ -1,146 +1,97 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { apiRequest } from '../utils/api';
 import '../styles/styles.css';
 import '../styles/utils.css';
 
 const Contact = () => {
   const [showForm, setShowForm] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // Nouvelle variable d'état pour savoir si on modifie un contact
+  const [isEditing, setIsEditing] = useState(false);
   const [contacts, setContacts] = useState([]);
-  const [name, setName] = useState('');
-  const [adress, setAdress] = useState('');
-  const [phone, setPhone] = useState('');
-  const [mail, setMail] = useState('');
-  const [currentContactId, setCurrentContactId] = useState(null); // ID du contact en cours de modification
+  const [formData, setFormData] = useState({ name: '', adress: '', phone: '', mail: '' });
+  const [currentContactId, setCurrentContactId] = useState(null);
 
-  // Fonction pour ouvrir/fermer la modale
   const toggleForm = () => {
-    setShowForm(!showForm);
-    if (!showForm) {
-      // Réinitialiser les champs du formulaire
-      setName('');
-      setAdress('');
-      setPhone('');
-      setMail('');
+    setShowForm(prevState => !prevState);
+    if (showForm) {
+      setFormData({ name: '', adress: '', phone: '', mail: '' });
       setIsEditing(false);
     }
   };
 
-  // Récupérer les contacts depuis l'API
-  useEffect(() => {
-    const fetchContacts = async () => {
-      const token = localStorage.getItem('authToken');
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          }
-        });
-        setContacts(response.data);
-      } catch (error) {
-        console.error('Erreur lors de la récupération des contacts:', error);
-      }
-    };
-
-    fetchContacts();
-  }, []);
-
-  // Ajouter un contact
-  const addContact = async (e) => {
-    e.preventDefault();
-
-    const contactData = {
-      name,
-      adress,
-      phone,
-      mail,
-    };
-
-    const token = localStorage.getItem('authToken'); // Récupérer le token depuis le localStorage
-
-    if (!token) {
-      alert('Vous devez être connecté pour ajouter un contact.');
-      return;
-    }
-
+  const fetchContacts = async () => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/add`,
-        contactData,
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`, // Ajouter le token d'authentification
-          },
-        }
-      );
-      setContacts(contacts.map(contact => (contact._id === currentContactId ? response.data : contact)));
-      setShowForm(false);
-      setIsEditing(false); // Reset mode edit
+      const data = await apiRequest('GET', `/api/contacts`, null, token);
+      setContacts(data);
     } catch (error) {
-      console.error('Erreur lors de l\'ajout du contact:', error);
+      console.error('Erreur lors de la récupération des contacts:', error);
     }
   };
 
-  // Modifier un contact
-  const updateContact = async (e) => {
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const { name, adress, phone, mail } = formData;
     if (!name || !adress || !phone || !mail) {
       alert('Tous les champs doivent être remplis');
       return;
     }
 
-    const formData = {
-      name,
-      adress,
-      phone,
-      mail,
-    };
-
     const token = localStorage.getItem('authToken');
     if (!token) {
-      alert('Vous devez être connecté pour modifier un contact.');
+      alert('Vous devez être connecté pour ajouter/modifier un contact.');
       return;
     }
 
+    const apiUrl = isEditing
+      ? `/api/contacts/update/${currentContactId}`
+      : '/api/contacts/add';
+    const method = isEditing ? 'PUT' : 'POST';
+
     try {
-      const response = await axios.put(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/update/${currentContactId}`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      });
-      setContacts(contacts.map(contact => (contact._id === currentContactId ? response.data : contact)));
+      const updatedContact = await apiRequest(method, `${apiUrl}`, formData, token);
+      setContacts(prevContacts =>
+        isEditing
+          ? prevContacts.map(contact => (contact._id === currentContactId ? updatedContact : contact))
+          : [...prevContacts, updatedContact]
+      );
       setShowForm(false);
-      setIsEditing(false); // Reset mode edit
+      setIsEditing(false);
+      setFormData({ name: '', adress: '', phone: '', mail: '' });
     } catch (error) {
-      console.error('Erreur lors de la modification du contact:', error.response?.data || error.message);
+      console.error(`Erreur lors de la ${isEditing ? 'modification' : 'ajout'} du contact:`, error);
     }
   };
 
-  // Supprimer un contact
+  const handleEdit = (contact) => {
+    setIsEditing(true);
+    setCurrentContactId(contact._id);
+    setFormData({ name: contact.name, adress: contact.adress, phone: contact.phone, mail: contact.mail });
+    setShowForm(true);
+  };
+
   const deleteContact = async (contactId) => {
     const token = localStorage.getItem('authToken');
+    if (!token) return;
+
     try {
-      await axios.delete(`${process.env.REACT_APP_SERVER_BACKEND_URL}/api/contacts/remove/${contactId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      });
+      await apiRequest('DELETE', `/api/contacts/remove/${contactId}`, null, token);
       setContacts(contacts.filter(contact => contact._id !== contactId));
     } catch (error) {
       console.error('Erreur lors de la suppression du contact:', error);
     }
   };
 
-  // Charger les données du contact pour modification
-  const handleEdit = (contact) => {
-    setIsEditing(true);
-    setCurrentContactId(contact._id);
-    setName(contact.name);
-    setAdress(contact.adress);
-    setPhone(contact.phone);
-    setMail(contact.mail);
-    setShowForm(true);
+  const handleDelete = (contactId) => {
+    const confirmDeletion = window.confirm("Êtes-vous sûr de vouloir supprimer cet animal ? Cette action est irréversible.");
+    if (confirmDeletion) {
+      deleteContact(contactId);
+    }
   };
 
   return (
@@ -156,11 +107,13 @@ const Contact = () => {
           <div className="contact-card" key={contact._id}>
             <div className="contact-info">
               <h2 className="contact-name">🩺 {contact.name}</h2>
-              <p><strong>📱</strong> {contact.phone}</p>
-              <p><strong>📍</strong> {contact.adress}</p>
-              <p><strong>✉️</strong> {contact.mail}</p>
-              <button onClick={() => handleEdit(contact)}>Modifier</button>
-              <button onClick={() => deleteContact(contact._id)}>Supprimer</button>
+              <a href={`tel:${contact.phone}`}><strong>📱</strong> {contact.phone}</a>
+              <p ><strong>📍</strong> {contact.adress}</p>
+              <a href={`mailto:${contact.mail}`}><strong>✉️</strong> {contact.mail}</a>
+              <div className='contact-btn'>
+                <button className='btn modify' onClick={() => handleEdit(contact)}>Modifier</button>
+                <button className='btn' onClick={() => handleDelete(contact._id)}>Supprimer</button>
+              </div>
             </div>
           </div>
         ))
@@ -173,49 +126,49 @@ const Contact = () => {
         <div className="modal-overlay" onClick={toggleForm}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3>{isEditing ? 'Modifier le contact' : 'Ajouter un contact'}</h3>
-            <form onSubmit={isEditing ? updateContact : addContact}>
+            <button className="canceled-form-btn" type="button" onClick={toggleForm}>X</button>
+            <form className="contact-form" onSubmit={handleSubmit}>
               <div>
-                <label>Nom :</label>
+                <p>Nom :</p>
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Nom du contact"
                   required
                 />
               </div>
               <div>
-                <label>Adresse :</label>
+                <p>Adresse :</p>
                 <input
                   type="text"
-                  value={adress}
-                  onChange={(e) => setAdress(e.target.value)}
+                  value={formData.adress}
+                  onChange={(e) => setFormData({ ...formData, adress: e.target.value })}
                   placeholder="Adresse"
                   required
                 />
               </div>
               <div>
-                <label>Téléphone :</label>
+                <p>Téléphone :</p>
                 <input
                   type="text"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                   placeholder="Téléphone"
                   required
                 />
               </div>
               <div>
-                <label>Email :</label>
+                <p>Email :</p>
                 <input
                   type="email"
-                  value={mail}
-                  onChange={(e) => setMail(e.target.value)}
+                  value={formData.mail}
+                  onChange={(e) => setFormData({ ...formData, mail: e.target.value })}
                   placeholder="Email"
                   required
                 />
               </div>
               <button type="submit">{isEditing ? 'Modifier' : 'Ajouter'}</button>
-              <button type="button" onClick={toggleForm}>Annuler</button>
             </form>
           </div>
         </div>
