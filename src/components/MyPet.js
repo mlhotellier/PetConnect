@@ -338,7 +338,7 @@ const MyPet = ({ pets, loadingPets, addPet, deletePet, updatePet }) => {
             <h3>Modifier l'animal</h3>
             <button className="canceled-form-btn" type="button" onClick={toggleForm}>X</button>
             <form onSubmit={handleEdit}>
-            <div className={imagePreview ? 'input-img-preview':''}>
+              <div className={imagePreview ? 'input-img-preview':''}>
                 <div className={imagePreview ? 'input-file-preview' : 'input-file'}>
                   <p className="button-file">+ Ajouter une photo</p>
                   <p className='infos-img-type'>jpg, png : 5mo max</p>
