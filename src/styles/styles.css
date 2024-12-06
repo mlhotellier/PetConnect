@@ -308,12 +308,12 @@ button:hover {
   position: relative;
   display: flex;
   align-items: center;
-  background-color: #cee3d367;
+  background-color: #f9f9f9;
   border-radius: 20px;
   margin: 4px 0 18px 0;
   width: -webkit-fill-available;
   padding: 5px 16px;
-  border: 1px solid rgb(51, 129, 69);
+  box-shadow:0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .contact-info {
@@ -368,6 +368,10 @@ button:hover {
   color: #333;
   font-size:18px;
   margin-right: 4px;
+}
+
+.contact-info a:hover:not(strong) {
+  font-weight: bold;
 }
 
 .contact-info p strong {
