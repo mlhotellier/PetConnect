@@ -181,6 +181,39 @@ button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.calendar-card .all-events-section {
+  margin: 0 10px;
+}
+
+.calendar-card .all-events-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.calendar-card .upcoming-events-section {
+  margin-top: 35px;
+}
+
+
+.calendar-card .upcoming-events-section h3 {
+  margin-bottom: 8px;
+}
+
+.calendar-card .upcoming-events-section .event-toggle button {
+  width: 50%;
+  background: transparent;
+  color: grey;
+  padding: 0;
+  margin: 0;
+  padding-bottom: 4px;
+  border-radius: 0;
+}
+
+.calendar-card .upcoming-events-section .event-toggle .active {
+  border-bottom: 1px solid #006edc;
+  color:#006edc
+}
+
 .react-calendar {
   border: 0px solid !important;
   margin: 10px;
@@ -712,3 +745,4 @@ color: #fff;
   background-color: #d6d6d6;
   color:#333;
 }
+

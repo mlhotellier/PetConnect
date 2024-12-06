@@ -123,14 +123,13 @@ function Profile() {
   return (
     <div style={{ marginRight: '15px' }}>
       <div className="profile">
-        <Calendar />
+        <Calendar pets={pets}/>
         <Contact />
       </div>
       <div className="profile">
         <MyPet
             pets={pets}
             loadingPets={loadingPets}
-            fetchPets={fetchPets}
             addPet={addPet}
             updatePet={updatePet}
             deletePet={deletePet}
