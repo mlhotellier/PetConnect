@@ -256,7 +256,6 @@ const WeightChart = ({ pets, loadingPets, addWeightData, deleteWeightData }) => 
                 ) : (
                   <>
                     <button type="submit">Supprimer</button>
-                    <button type="button" onClick={toggleForm}>Annuler</button>
                   </>
                 )}
               </div>
