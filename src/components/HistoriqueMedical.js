@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../utils/api'; // Assurez-vous que apiRequest est correctement configuré
 import '../styles/styles.css';
 import '../styles/utils.css';
-
+import { formatDate } from '../utils/formatDate'
 // Logos spécifiques pour les différents types de fichiers
 import imagePreviewDefault from '../assets/icons/default.png'; // Logo par défaut pour l'image
 import pdfLogo from '../assets/icons/pdf.png'; // Logo pour les fichiers PDF
@@ -128,7 +128,7 @@ const HistoriqueMedical = () => {
 
   // Fonction pour obtenir le logo en fonction du type de fichier
   const getFileLogo = (file) => {
-    const fileName = file?.name;
+    const fileName = file?.name || file?.originalname;
     const fileExtension = fileName?.split('.').pop().toLowerCase();
     
     if (fileExtension === 'pdf') return pdfLogo;
@@ -198,16 +198,33 @@ const HistoriqueMedical = () => {
         {documents.length === 0 ? (
           <p>Vous n'avez aucun document.</p>
         ) : (
-          <ul>
-            {documents.map((doc) => (
-              <li className={doc._id} key={doc._id}>
-                <a href={`${process.env.REACT_APP_SERVER_BACKEND_URL}${doc.filePath}`} target="_blank" rel="noopener noreferrer">
-                  {doc.originalname}
-                </a>
-                <button onClick={() => handleDeleteDocument(doc._id)}>X</button>
-              </li>
-            ))}
+          <ul className='files-list'>
+            {documents.map((doc) => {
+              const formatedDate = formatDate(doc.uploadedAt); // Formater la date
+              return (
+                <li key={doc._id}>
+                  <div>
+                    <img 
+                      id="fileLogo"
+                      src={getFileLogo(doc)}
+                      alt="Logo du fichier" 
+                      className='icon-file'
+                    />
+                    <div className='infos-file'>
+                      <a href={`${process.env.REACT_APP_SERVER_BACKEND_URL}${doc.filePath}`} target="_blank" rel="noopener noreferrer">
+                        <p className='title-file'>{doc.originalname}</p>
+                        <p>{formatedDate}</p>
+                      </a>
+                    </div>
+                  </div>
+                  <div className='btn'>
+                    <button className="remove-btn" onClick={() => handleDeleteDocument(doc._id)}>Supprimer</button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
+
         )}
       </div>
     </div>

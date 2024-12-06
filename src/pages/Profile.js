@@ -123,8 +123,8 @@ function Profile() {
   return (
     <div style={{ marginRight: '15px' }}>
       <div className="profile">
-        <Contact />
         <Calendar />
+        <Contact />
       </div>
       <div className="profile">
         <MyPet

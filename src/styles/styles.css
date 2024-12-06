@@ -396,16 +396,6 @@ button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.documents-card {
-  display: flex;
-  background-color: #f9f9f9;
-  border-radius: 20px;
-  margin: 4px 0 18px 0;
-  width: -webkit-fill-available;
-  padding: 8px 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 .food-card {
   display: flex;
   background-color: #f9f9f9;
@@ -638,4 +628,83 @@ color: #fff;
 
 .modal-content .form-file strong {
   margin-left: 5px;
+}
+
+.documents-card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  margin: 4px 0 18px 0;
+  padding: 8px 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.documents-card .files-list {
+  list-style-type: none;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.documents-card .files-list li {
+  display: flex;
+  margin: 12px 14px;
+  padding: 4px;
+  width: -webkit-fill-available;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.documents-card .files-list li div {
+  display: flex;
+  flex-direction: row;
+}
+
+.documents-card .files-list li div .btn {
+  display: flex;
+  flex-direction: row;
+}
+
+.documents-card .files-list li div .infos-file {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.documents-card .files-list li div .infos-file a {
+  text-decoration: none;
+}
+
+.documents-card .files-list li div .infos-file .title-file {
+  color: #333;
+  font-weight: bold;
+}
+
+.documents-card .files-list li div .infos-file a:hover .title-file {
+  text-decoration: underline;
+}
+
+.documents-card .files-list .icon-file {
+  height: 60px;
+  width:60px;
+  margin-right:12px;
+}
+
+.documents-card .remove-btn {
+  padding: 2px 4px;
+  margin: 2px;
+  font-size: 13px;
+  background-color: #d64f4f;
+  color:#fff;
+} 
+
+.documents-card .remove-btn:hover {
+  background-color: #d6d6d6;
+  color:#333;
 }
