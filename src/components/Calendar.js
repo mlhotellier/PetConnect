@@ -36,11 +36,11 @@ const CalendarCard = ({ pets }) => {
   const handleModalClose = () => {
     setShowModal(false);
     setNewEvent({
-      title: '',
-      date: '',
-      petName: '',
-      description: '',
-    });
+            title: '',
+            date: '',
+            petName: '',
+            description: '',
+      });
   };
 
   const handleEventClick = (event) => {
@@ -115,7 +115,32 @@ const CalendarCard = ({ pets }) => {
       alert('Une erreur est survenue lors de l\'ajout de l\'événement');
     }
   };
-  
+
+  // Fonction pour supprimer un événement
+  const deleteEvent = async (eventId) => {  
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      alert('Vous devez être connecté pour supprimer un événement.');
+      return;
+    }
+    
+    try {
+      // Effectuer la requête DELETE pour supprimer l'événement
+      await apiRequest('DELETE', `/api/evenements/delete/${eventId}`, null, token);
+
+      // Mettre à jour la liste des événements sans l'événement supprimé
+      setAppointments((prevAppointments) =>
+        prevAppointments.filter((event) => event._id !== eventId)
+      );
+
+      // Fermer la modale des détails après suppression
+      setSelectedEvent(null);
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'événement:', error);
+      alert('Une erreur est survenue lors de la suppression de l\'événement.');
+    }
+  };
+
   // Filtrer et trier les événements pour les événements passés et à venir
   const filterEvents = (events, upcoming = true) => {
     const currentDate = new Date();
@@ -283,10 +308,16 @@ const CalendarCard = ({ pets }) => {
 
       {/* Détails d'un événement sélectionné */}
       {selectedEvent && (
-        <div className="event-detail-modal">
-          <h3>{selectedEvent.title}</h3>
-          <p>{selectedEvent.description}</p>
-          <button onClick={handleDetailsModalClose}>Fermer</button>
+        <div className='modal-overlay'>
+          <div className="modal-content">
+            <button className="canceled-form-btn" onClick={handleDetailsModalClose}>X</button>
+            <h3>{selectedEvent.title}</h3>
+            <p>{formatDate(new Date(selectedEvent.date))}</p>
+            <p>{selectedEvent.petName}</p>
+            <p>{selectedEvent.description}</p>
+            <button onClick={handleDetailsModalClose}>Modifier</button>
+            <button onClick={() => deleteEvent(selectedEvent._id)}>Supprimer</button>
+          </div>
         </div>
       )}
     </div>
