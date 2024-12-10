@@ -185,7 +185,7 @@ button:hover {
 .calendar-card .all-events-section {
   margin: 0 10px;
   position: relative;
-  width: 45%;
+  width: 50%;
 }
 
 .calendar-card .all-events-section ul {
@@ -202,7 +202,7 @@ button:hover {
   position: absolute;
   bottom: 10px;
   transform: scale(1);
-  transition: transform 0.2 ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 
 .calendar-card .all-events-section .btn:hover {
@@ -238,21 +238,38 @@ button:hover {
   color:#006edc
 }
 
-.calendar-card .upcoming-events-section .event-resume {
+.calendar-card .all-events-section .event-resume {
   padding: 4px 8px;
   font-size: 15px;
 }
 
-.calendar-card .upcoming-events-section .event-resume:hover {
+.calendar-card .all-events-section .event-resume:hover {
   background-color: #fff;
   border-radius: 4px;
   cursor: pointer;
 }
 
+.calendar-card .all-events-section .event-resume .event-description {
+  position:absolute;
+  right: 0;
+  margin: 0 4px;
+}
+
+.calendar-card .all-events-section .event-resume:hover .event-description {
+  font-weight: bold;
+  color: #006edc;
+}
+
+
+.calendar-card .all-events-section .events-today-section .event-resume .event-description-visible {
+  color: #9b9a9a;
+  font-size: 14px;
+}
+
 .react-calendar {
   border: 0px solid !important;
   margin: 10px;
-  width: 55% !important;
+  width: 50% !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
@@ -549,7 +566,7 @@ text-align: center;
 position:relative;
 background-color: transparent;
 opacity: 0;
-width: 100%;
+width: -webkit-fill-available;
 margin-bottom: 6px;
 }
 
@@ -646,11 +663,10 @@ margin-bottom: 6px;
   margin: 15px auto 0;
 }
 
-.modal-content form button:hover {
+.modal-content form button:hover, .modal-content .btn-event-gab button:hover {
 background-color: green;
 color: #fff;
 }
-
 
 .modal-content form .error-message {
   color: red;
@@ -706,6 +722,62 @@ color: #fff;
 
 .modal-content .form-file strong {
   margin-left: 5px;
+}
+
+.modal-content .btn {
+  padding: 4px 8px;
+  margin: 8px;
+  font-size: 14px;
+  background-color: #a9a9a9;
+  color:#fff;
+  transform: scale(1);
+  transition: all 0.2s ease-in-out;
+}
+
+.modal-content #event {
+  margin: 0 12px;
+}
+
+.modal-content .btn:hover {
+  transform: scale(1.05);
+}
+
+.modal-content .form-event .select-input-gab {
+  display:flex;
+  width:100%;
+  justify-content:space-between;
+  align-items:baseline;
+}
+
+.modal-content .btn-event-gab {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 30px;
+}
+
+.modal-content .btn-event-gab .edit {
+  background-color: #dda955;
+}
+
+.modal-content .form-event select {
+  margin-top:2px;
+  margin-bottom: 6px;
+  padding: 5px;
+  border: 1px solid #dae0e6;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px #ededed;
+  width: 65%;
+}
+
+.modal-content .form-event textarea {
+  margin-top:2px;
+  margin-bottom: 6px;
+  padding: 10px;
+  font-family: 'Roboto';
+  height: 90px;
+  border: 1px solid #dae0e6;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px 0px #ededed;
 }
 
 .documents-card {

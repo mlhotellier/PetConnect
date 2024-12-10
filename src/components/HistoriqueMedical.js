@@ -43,7 +43,6 @@ const HistoriqueMedical = () => {
   const handleFileSelection = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
-    console.log(selectedFile);
   };
 
   const toggleForm = () => {
