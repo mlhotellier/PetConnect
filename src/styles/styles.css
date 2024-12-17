@@ -274,6 +274,10 @@ button:hover {
   border-radius: 10px;
 }
 
+.react-calendar button {
+  position: relative !important;
+}
+
 .react-calendar__tile {
   color: #333;
   border-radius: 6px;
@@ -859,3 +863,10 @@ color: #fff;
   color:#333;
 }
 
+.event-icon {
+  color: #ff6347; /* Vous pouvez personnaliser la couleur */
+  font-size: 0.5rem; /* Ajuster la taille de l'icône */
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

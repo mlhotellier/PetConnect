@@ -4,6 +4,7 @@ import { apiRequest } from '../utils/api';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/styles.css';
 import '../styles/utils.css';
+import { FaFlag } from 'react-icons/fa'; // Icône pour l'événement
 
 const CalendarCard = ({ pets }) => {
   const [date, setDate] = useState(new Date()); // Date actuelle ou sélectionnée
@@ -229,8 +230,8 @@ const CalendarCard = ({ pets }) => {
 
   // Gérer la mise à jour de la date sélectionnée
   const handleDateChange = (newDate) => {
-    setDate(newDate); // Met à jour la date sélectionnée
-  };
+    setDate(newDate); // Mise à jour de la date
+  };  
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -242,7 +243,6 @@ const CalendarCard = ({ pets }) => {
     });
   };
   
-
   const formatDateForInput = (date) => {
     const d = new Date(date);
     const year = d.getFullYear();
@@ -254,15 +254,21 @@ const CalendarCard = ({ pets }) => {
   const handleViewEvent = () => {
     // Met à jour la date sélectionnée dans le calendrier
     setDate(new Date(selectedEvent.date));
+    handleDateChange(new Date(selectedEvent.date))
     // Ferme la modale
     handleDetailsModalClose();
   };
-  
-  
-  
+    
   // Réinitialiser la date à aujourd'hui
   const resetDate = () => {
     setDate(new Date());
+    handleDateChange(new Date())
+  };
+
+  // Fonction pour vérifier si un événement existe pour une date donnée
+  const hasEvent = (date) => {
+    const formattedDate = formatDate(date);
+    return appointments.some((event) => formatDate(new Date(event.date)) === formattedDate);
   };
 
   return (
@@ -274,7 +280,17 @@ const CalendarCard = ({ pets }) => {
 
       <div className="calendar-card">
         {/* Affichage du calendrier */}
-        <Calendar onChange={handleDateChange} value={date} />
+        <Calendar 
+            onChange={handleDateChange} 
+            value={date} 
+            key={date.toString()} 
+            tileContent={({ date, view }) => {
+              if (view === 'month' && hasEvent(date)) {
+                return <FaFlag className="event-icon" />;
+              }
+              return null;
+            }}
+        />
 
         <div className='all-events-section'>
           {/* Section des événements du jour */}
