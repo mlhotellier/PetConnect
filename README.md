@@ -1,4 +1,4 @@
-# My Pet Diary
+# PetConnect
 
 Bienvenue dans le projet frontend de notre application ! Ce projet est construit avec React et permet d'avoir toutes les informations nécessaires au bien-être de vos animaux (suivi, contact, documents, etc.) d'interagir avec un backend via des API.
 
@@ -18,11 +18,11 @@ Bienvenue dans le projet frontend de notre application ! Ce projet est construit
 
 1. Clonez le projet depuis le dépôt Git :
    ```bash
-   git clone https://github.com/mlhotellier/my-pet-diary.git
+   git clone https://github.com/mlhotellier/PetConnect.git
    ```
 2. Accédez au dossier du projet :
     ```bash
-    cd my-pet-diary
+    cd PetConnect
     ```
 3. Installez les dépendances du projet :
     ```bash
@@ -35,7 +35,7 @@ Bienvenue dans le projet frontend de notre application ! Ce projet est construit
     ```
 
 
-## Configuration
+## Configuration du front
 Avant de démarrer l'application, vous devez configurer certaines variables d'environnement. Créez un fichier .env à la racine de votre projet et ajoutez les variables nécessaires.
 
 Exemple de fichier .env :
