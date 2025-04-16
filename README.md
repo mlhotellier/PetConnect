@@ -47,6 +47,9 @@ REACT_APP_SERVER_BACKEND_URL=http://localhost:5000
 
 Note : Le fichier .env doit être ajouté dans votre .gitignore pour éviter de compromettre vos informations sensibles.
 
+## Configuration du backend
+Plus d'infos sur ce repository: [Lien vers le backend](https://github.com/mlhotellier/_backend_PetConnect/tree/main)
+
 ## Démarrage du projet
 Pour démarrer le projet en mode développement, utilisez la commande suivante :
 
