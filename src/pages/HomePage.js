@@ -62,18 +62,18 @@ function HomePage() {
         <h2>Ce que disent nos utilisateurs</h2>
         <div className="testimonials-container">
           <blockquote>
-            "Grâce à MyPetDiary, je n'oublie plus aucun vaccin pour mes chiens. C'est super pratique
+            "Grâce à PetConnet, je n'oublie plus aucun vaccin pour mes chiens. C'est super pratique
             et simple à utiliser !" – <strong>Marie</strong>
           </blockquote>
           <blockquote>
             "Je peux enfin suivre les activités de mes chats et avoir une vue complète sur leur
-            santé. Merci MyPetDiary !" – <strong>Thomas</strong>
+            santé. Merci PetConnect !" – <strong>Thomas</strong>
           </blockquote>
         </div>
       </section>
 
       <section className="cta">
-        <h2>Rejoignez MyPetDiary dès aujourd'hui</h2>
+        <h2>Rejoignez PetConnect dès aujourd'hui</h2>
         <p className='cta-text'>
           Simplifiez la gestion de vos animaux et profitez d'une expérience fluide pour tout suivre
           au même endroit.
