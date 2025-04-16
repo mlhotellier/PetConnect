@@ -1,26 +1,28 @@
 import React from 'react';
 import '../styles/homepage.css';
+import { Link } from 'react-router-dom';
+import historic from '../assets/icons/historic.png';
+import rappel from '../assets/icons/rappel.png';
+import loupe from '../assets/icons/loupe.png';
 
 function HomePage() {
   return (
-    <div style={{marginRight:'15px'}} className="homepage">
-      {/* Section d'accueil */}
+    <div className="homepage">
       <section className="hero">
         <h1>
-          Bienvenue sur <span style={{ color: '#f14a84' }}>MyPetDiary</span> ! 👋
+          Bienvenue sur <span style={{ color: '#f14a84' }}>PetConnect</span> ! 👋
         </h1>
         <h2>
           Retrouvez toutes les informations et le suivi de vos animaux dans un seul endroit.
         </h2>
       </section>
 
-      {/* Section sur les fonctionnalités */}
       <section className="features">
-        <h2>Pourquoi choisir MyPetDiary ?</h2>
+        <h2>Pourquoi choisir PetConnect ?</h2>
         <div className="features-container">
           <div className="feature-card">
             <img
-              src="https://via.placeholder.com/150"
+              src={loupe}
               alt="Suivi de santé"
               className="feature-image"
             />
@@ -32,7 +34,7 @@ function HomePage() {
           </div>
           <div className="feature-card">
             <img
-              src="https://via.placeholder.com/150"
+              src={historic}
               alt="Historique des activités"
               className="feature-image"
             />
@@ -44,7 +46,7 @@ function HomePage() {
           </div>
           <div className="feature-card">
             <img
-              src="https://via.placeholder.com/150"
+              src={rappel}
               alt="Rappels importants"
               className="feature-image"
             />
@@ -56,7 +58,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Section sur les témoignages */}
       <section className="testimonials">
         <h2>Ce que disent nos utilisateurs</h2>
         <div className="testimonials-container">
@@ -71,14 +72,13 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Section Appel à l'action */}
       <section className="cta">
         <h2>Rejoignez MyPetDiary dès aujourd'hui</h2>
-        <p>
+        <p className='cta-text'>
           Simplifiez la gestion de vos animaux et profitez d'une expérience fluide pour tout suivre
           au même endroit.
         </p>
-        <button className="cta-button">Créer un compte</button>
+        <Link to="/tarifs"><button className="cta-button">Créer un compte</button></Link>
       </section>
     </div>
   );

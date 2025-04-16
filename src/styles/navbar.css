@@ -87,3 +87,58 @@
       margin-bottom: 0; /* Supprime l'espacement vertical */
     }
   }  
+
+/* Navbar horizontal */
+.head-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 25px;
+}
+
+.head-nav .logo-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.head-nav .logo-container .logo {
+  width: 80px;
+}
+
+.head-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.head-nav ul li {
+  margin: 10px 22px;
+}
+
+.head-nav ul li a {
+  color: #333;
+  text-decoration: none;
+}
+.head-nav ul li a:hover {
+  color: #ee9ddf;
+  text-decoration: none;
+}
+
+.head-nav ul .account-btn {
+  padding: 8px 12px;
+  border-radius: 8px;  
+  background-color: #ee9ddf;
+  color: #fff;
+}
+
+.head-nav ul .account-btn:hover {
+  background-color: #f0d0ea;
+  color: #333
+}

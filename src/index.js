@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import Navbar from './components/Navbar';
+import HeadNav from './components/HeadNav';
 import HomePage from './pages/HomePage';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
@@ -18,38 +19,46 @@ const AppWrapper = () => {
 };
 
 const App = () => {
-  const navigate = useNavigate(); // Utilisation de useNavigate pour la navigation
-  const [isLogged, setIsLogged] = useState(false); // État pour gérer l'authentification
+  const navigate = useNavigate();
+  const [isLogged, setIsLogged] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [redirectPath, setRedirectPath] = useState('/'); // Chemin à rediriger après connexion
 
-  // Vérification de l'état d'authentification lors du chargement de l'application
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    setIsLogged(!!token); // Si un token est présent, l'utilisateur est connecté
+    setIsLogged(!!token);
   }, []);
 
-  // Fonction pour gérer la déconnexion
   const handleLogout = () => {
     setIsLogged(false);
     localStorage.removeItem('authToken');
     localStorage.removeItem('userId');
-    navigate('/profile'); // Rediriger vers la page de profil
+    navigate('/'); // Redirection vers l'accueil après déconnexion
   };
 
   return (
-    <div className="content">
-      <Navbar isLogged={isLogged} onLogout={handleLogout} />
+    <div className={isLogged ? "content" : ""}>
+      {isLogged ? <Navbar isLogged={isLogged} onLogout={handleLogout} /> : <HeadNav />}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/contact" element={<Contact />} />
         <Route
           path="/profile"
-          element={isLogged ? <Profile /> : <AuthPage setIsLogged={setIsLogged} />}
+          element={
+            isLogged ? (
+              <Profile />
+            ) : (
+              <AuthPage setIsLogged={setIsLogged} redirectPath={redirectPath} />
+            )
+          }
         />
       </Routes>
     </div>
   );
 };
+
+export default App;
 
 // Rendu de l'application
 const root = ReactDOM.createRoot(document.getElementById('root'));
