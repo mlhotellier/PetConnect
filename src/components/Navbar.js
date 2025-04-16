@@ -20,6 +20,9 @@ const Navbar = ({ isLogged, onLogout }) => {
           <Link to="/contact">Contact</Link>
         </li>
         <li>
+          <Link to="/tarifs">Tarifs</Link>
+        </li>
+        <li>
           <Link to="/profile">{isLogged ? 'Mon compte' : 'Se connecter'}</Link>
         </li>
         {isLogged ? 

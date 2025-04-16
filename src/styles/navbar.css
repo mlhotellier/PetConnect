@@ -2,7 +2,7 @@
 .navbar-vertical {
     width: 200px;
     height: 90%;
-    background: linear-gradient(0deg, rgb(232 117 173 / 61%) 0%, #B5FFFC 100%);
+    background: linear-gradient(0deg, rgba(236, 162, 198, 0.61) 0%, #d4d4d4 100%);
     box-shadow: 0px 4px 10px 1px #B9B9B9;
     position: fixed;
     top: 15px;

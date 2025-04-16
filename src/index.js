@@ -6,6 +6,7 @@ import HeadNav from './components/HeadNav';
 import HomePage from './pages/HomePage';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
+import Tarifs from './pages/Tarifs';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
 
@@ -42,6 +43,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/tarifs" element={<Tarifs />} />
         <Route path="/contact" element={<Contact />} />
         <Route
           path="/profile"
